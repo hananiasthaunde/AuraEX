@@ -358,6 +358,10 @@ export async function handleRequest(req, res) {
     if (pathname === '/api/mentorados') return handleWorkbookApi(req, res);
     if (pathname === '/api/export/excel') return handleExportExcelApi(req, res);
 
+    if (process.env.VERCEL) {
+      return sendJson(req, res, 404, { error: 'Rota não encontrada.' });
+    }
+
     if (pathname === '/login' || pathname === '/login.html') {
       if (authenticateSession(req)) return redirect(res, '/');
       return serveFile(req, res, path.join(ROOT, 'login.html'), { noCache: true });
