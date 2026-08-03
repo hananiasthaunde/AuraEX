@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "users": [
+    {
+      "id": "usr_admin",
+      "name": "Administrador AuraEX",
+      "email": "ananias.thaunde@sbdc.com.br",
+      "role": "admin",
+      "password": {
+        "algorithm": "pbkdf2-sha256",
+        "salt": "7a70d16b5dfff4deb213eca60ff3adae",
+        "iterations": 210000,
+        "hash": "2d418d4dc8e5eeb24eb8c949097b6fef65d2f5987f3cd73434e7725ac891717d"
+      },
+      "active": true,
+      "createdAt": "2026-07-31T09:45:00.000Z",
+      "updatedAt": "2026-07-31T09:45:00.000Z"
+    }
+  ]
+}

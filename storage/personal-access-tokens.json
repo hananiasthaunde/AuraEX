@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "tokens": [
+    {
+      "id": "pat_bootstrap",
+      "name": "Agente MCP inicial",
+      "prefix": "auraex_pat_ozJhWW9",
+      "tokenHash": "04fc040b6a1eceb7f015139dd489bb59f6dd3b94472a8385213a607478c4cd58",
+      "userId": "usr_admin",
+      "scopes": [
+        "auraex:read",
+        "auraex:write"
+      ],
+      "createdAt": "2026-07-31T09:45:00.000Z",
+      "expiresAt": "2027-07-31T23:59:59.000Z",
+      "lastUsedAt": null,
+      "revokedAt": null
+    }
+  ]
+}

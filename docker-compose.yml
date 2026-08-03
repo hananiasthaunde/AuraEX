@@ -1,0 +1,25 @@
+services:
+  auraex:
+    build: .
+    container_name: auraex
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      AURAEX_PORT: 8080
+      AURAEX_BIND: 0.0.0.0
+      AURAEX_PUBLIC_URL: http://localhost:8080
+      AURAEX_ALLOWED_HOSTS: localhost,127.0.0.1
+      AURAEX_ALLOWED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      AURAEX_SESSION_SECRET: ${AURAEX_SESSION_SECRET}
+      AURAEX_SESSION_HOURS: ${AURAEX_SESSION_HOURS:-12}
+    volumes:
+      - ./storage:/app/storage
+      - ./document:/app/document:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

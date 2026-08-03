@@ -1,0 +1,9 @@
+node_modules/
+*.log
+.DS_Store
+.env
+storage/dashboard-data.previous.json
+storage/audit-log.jsonl
+storage/*.tmp
+storage/sessions.json
+CREDENCIAIS_INICIAIS.txt

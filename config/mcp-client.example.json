@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "auraex": {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:8080/mcp",
+      "headers": {
+        "Authorization": "Bearer COLE_AQUI_O_SEU_TOKEN_AURAEX"
+      }
+    }
+  }
+}

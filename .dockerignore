@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+CREDENCIAIS_INICIAIS.txt
+*.zip
+storage/audit-log.jsonl
+storage/*.previous.json
