@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
-    "check": "node --check server.mjs && node --check mcp.mjs && node --check mcp-fallback.mjs && node --check lib/security.mjs && node --check lib/data-store.mjs && node --check app.js && node --check login.js && node --check excel-bridge.js && node --check scripts/test-mcp.mjs && node --check scripts/generate-pat.mjs && node --check scripts/reset-admin-password.mjs",
+    "check": "node --check server.mjs && node --check mcp.mjs && node --check mcp-fallback.mjs && node --check lib/security.mjs && node --check lib/data-store.mjs && node --check public/app.js && node --check public/login.js && node --check public/excel-bridge.js && node --check scripts/test-mcp.mjs && node --check scripts/generate-pat.mjs && node --check scripts/reset-admin-password.mjs",
     "test:mcp": "node scripts/test-mcp.mjs",
     "token:create": "node scripts/generate-pat.mjs",
     "admin:password": "node scripts/reset-admin-password.mjs"
