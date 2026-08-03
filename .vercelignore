@@ -1,0 +1,7 @@
+scratch/
+scripts/
+document/
+exemplo/
+*.xlsx
+*.py
+PROMPT_PARA_AGENTE_DE_PROGRAMACAO.md
