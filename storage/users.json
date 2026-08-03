@@ -15,6 +15,21 @@
       "active": true,
       "createdAt": "2026-07-31T09:45:00.000Z",
       "updatedAt": "2026-07-31T09:45:00.000Z"
+    },
+    {
+      "id": "usr_cd780cf3-a82f-4fb4-9a88-d8759c9a7ae9",
+      "name": "Aline Paes",
+      "email": "aline.paes@sbdc.com.br",
+      "role": "admin",
+      "active": true,
+      "password": {
+        "algorithm": "pbkdf2-sha256",
+        "salt": "cc5787c1fbca7160ee029deb981001b4",
+        "iterations": 210000,
+        "hash": "50dbe3028a48e9f9ce5bbed6c408c90d4cdc6f68e559cc29c8468e680bcbbf31"
+      },
+      "createdAt": "2026-08-03T13:15:13.784Z",
+      "updatedAt": "2026-08-03T13:15:13.784Z"
     }
   ]
 }
