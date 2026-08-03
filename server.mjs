@@ -388,21 +388,23 @@ export async function handleRequest(req, res) {
 
 const server = http.createServer(handleRequest);
 
-server.listen(PORT, BIND, () => {
-  console.log('\nAuraEX 3.0 em execução:');
-  console.log(`  Sistema: ${PUBLIC_URL}`);
-  console.log(`  Login:   ${PUBLIC_URL.replace(/\/$/, '')}/login.html`);
-  console.log(`  MCP:     ${PUBLIC_URL.replace(/\/$/, '')}/mcp (${mcpImplementation})`);
-  console.log('\nCredenciais iniciais: CREDENCIAIS_INICIAIS.txt');
-  console.log('Para encerrar, pressione Ctrl+C.\n');
-});
+if (!process.env.VERCEL) {
+  server.listen(PORT, BIND, () => {
+    console.log('\nAuraEX 3.0 em execução:');
+    console.log(`  Sistema: ${PUBLIC_URL}`);
+    console.log(`  Login:   ${PUBLIC_URL.replace(/\/$/, '')}/login.html`);
+    console.log(`  MCP:     ${PUBLIC_URL.replace(/\/$/, '')}/mcp (${mcpImplementation})`);
+    console.log('\nCredenciais iniciais: CREDENCIAIS_INICIAIS.txt');
+    console.log('Para encerrar, pressione Ctrl+C.\n');
+  });
 
-async function shutdown(signal) {
-  console.log(`\nRecebido ${signal}. A encerrar...`);
-  server.close();
-  await mcpHandler.close();
-  process.exit(0);
+  async function shutdown(signal) {
+    console.log(`\nRecebido ${signal}. A encerrar...`);
+    server.close();
+    await mcpHandler.close();
+    process.exit(0);
+  }
+
+  process.on('SIGINT', () => void shutdown('SIGINT'));
 }
-
-process.on('SIGINT', () => void shutdown('SIGINT'));
 process.on('SIGTERM', () => void shutdown('SIGTERM'));
