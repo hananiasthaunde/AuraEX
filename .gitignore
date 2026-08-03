@@ -7,3 +7,5 @@ storage/audit-log.jsonl
 storage/*.tmp
 storage/sessions.json
 CREDENCIAIS_INICIAIS.txt
+Conversa backup.md
+
