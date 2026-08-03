@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ff5a1f" />
+  <meta name="description" content="AuraEX — Gestão simples, visual e integrada de mentorias." />
+  <title>AuraEX • Gestão de Mentorias</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5l7-3v19M19 21V9l-7-3M8 8h1M8 12h1M8 16h1M15 12h1M15 16h1"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 9v11M15 9v11"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.09A1.7 1.7 0 0 0 9 19.36a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.64 15 1.7 1.7 0 0 0 3.09 14H3v-4h.09A1.7 1.7 0 0 0 4.64 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.64 1.7 1.7 0 0 0 10 3.09V3h4v.09A1.7 1.7 0 0 0 15 4.64a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.36 9 1.7 1.7 0 0 0 20.91 10H21v4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.25 2.25c-.7.3-1.05.72-1.05 1.5V13M12 17h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9m0 0 4 4m-4-4-4 4M4 3h16"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M16 7l2 2M14 9l2 2"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-wrap">
+        <img src="assets/logo.svg" alt="AuraEX" class="brand-logo" />
+        <button class="sidebar-close" id="sidebarClose" aria-label="Fechar menu"><svg><use href="#i-x"/></svg></button>
+      </div>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-view="overview"><svg><use href="#i-home"/></svg><span>Visão geral</span></button>
+        <button class="nav-item" data-view="mentees"><svg><use href="#i-users"/></svg><span>Mentorados</span></button>
+        <button class="nav-item" data-view="sessions"><svg><use href="#i-grid"/></svg><span>Tabela de sessões</span></button>
+        <button class="nav-item" data-view="agenda"><svg><use href="#i-calendar"/></svg><span>Agenda e marcações</span></button>
+        <button class="nav-item" data-view="companies"><svg><use href="#i-building"/></svg><span>Empresas</span></button>
+        <button class="nav-item" data-view="raw"><svg><use href="#i-table"/></svg><span>Planilha</span></button>
+        <button class="nav-item" data-view="settings"><svg><use href="#i-settings"/></svg><span>Configurações</span></button>
+      </nav>
+
+      <div class="sidebar-tip">
+        <span class="tip-icon">?</span>
+        <div><strong>Primeira vez?</strong><small>Abra o guia rápido para conhecer a plataforma.</small></div>
+        <button id="sidebarHelpBtn">Ver guia</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-chip-sidebar">
+            <span class="user-avatar" id="sidebarUserAvatar">AU</span>
+            <div><strong id="sidebarUserName">Utilizador</strong><small id="sidebarUserRole">A carregar...</small></div>
+          </div>
+          <button class="btn btn-soft logout-btn-sidebar" id="sidebarLogoutBtn" title="Encerrar sessão"><svg><use href="#i-logout"/></svg><span>Sair</span></button>
+        </div>
+        <div class="source-card">
+          <span class="source-dot"></span>
+          <div><strong>Documento conectado</strong><small id="sourceFileSidebar">Excel</small></div>
+        </div>
+        <small class="copyright">AuraEX • SBDC © 2026</small>
+      </div>
+    </aside>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button mobile-menu" id="mobileMenu" aria-label="Abrir menu"><span>☰</span></button>
+          <div>
+            <p class="eyebrow">GESTÃO DE MENTORIAS</p>
+            <h1 id="pageTitle">Visão geral</h1>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <label class="sheet-picker" title="Escolha qual aba do Excel deseja gerir">
+            <span>Programa</span>
+            <select id="sheetSelect" aria-label="Planilha ativa"></select>
+          </label>
+          <div class="user-chip" title="Utilizador autenticado">
+            <span class="user-avatar" id="userAvatar">AU</span>
+            <div><strong id="currentUserName">Utilizador</strong><small id="currentUserRole">A carregar...</small></div>
+          </div>
+          <button class="btn btn-soft logout-btn" id="logoutBtn"><svg><use href="#i-logout"/></svg><span>Sair</span></button>
+          <button class="btn btn-soft" id="helpBtn"><svg><use href="#i-help"/></svg><span>Ajuda</span></button>
+          <button class="btn btn-soft" id="importBtn"><svg><use href="#i-upload"/></svg><span>Importar</span></button>
+          <button class="btn btn-primary" id="exportBtn"><svg><use href="#i-download"/></svg><span>Exportar Excel</span></button>
+          <input type="file" id="fileInput" accept=".xlsx,.xlsm" hidden />
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="notice" id="notice" hidden></div>
+
+        <section class="view active" id="view-overview">
+          <div class="welcome-card">
+            <div class="welcome-copy">
+              <span class="welcome-kicker">PAINEL SIMPLIFICADO</span>
+              <h2>Todos os mentorados, sessões e próximos passos num só lugar.</h2>
+              <p>Atualize a operação sem mexer diretamente nas células do Excel. O sistema organiza os dados e gera um relatório profissional quando precisar.</p>
+              <div class="welcome-actions">
+                <button class="btn btn-light" data-open-add><svg><use href="#i-plus"/></svg>Novo mentorado</button>
+                <button class="btn btn-glass" data-go="sessions">Abrir tabela de sessões</button>
+              </div>
+            </div>
+            <div class="welcome-visual" aria-hidden="true">
+              <div class="mini-card mini-card-a"><span>Próxima sessão</span><strong id="heroNextCount">0</strong><small>marcações identificadas</small></div>
+              <div class="mini-card mini-card-b"><span>Progresso médio</span><strong id="heroProgress">0%</strong><div class="mini-progress"><i id="heroProgressBar"></i></div></div>
+            </div>
+          </div>
+
+          <div class="stats-grid" id="statsGrid"></div>
+
+          <div class="dashboard-grid">
+            <article class="panel panel-wide">
+              <div class="panel-head">
+                <div><span class="panel-kicker">ACOMPANHAMENTO</span><h3>Próximas sessões e pendências</h3><p>Os itens mais importantes para agir agora.</p></div>
+                <button class="text-btn" data-go="agenda">Ver todas as marcações →</button>
+              </div>
+              <div id="upcomingList" class="upcoming-list"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head"><div><span class="panel-kicker">DISTRIBUIÇÃO</span><h3>Mentorados por empresa</h3><p>Participação por organização.</p></div></div>
+              <div id="companyChart" class="company-chart"></div>
+            </article>
+
+            <article class="panel quick-panel">
+              <div class="panel-head"><div><span class="panel-kicker">AÇÕES RÁPIDAS</span><h3>O que deseja fazer?</h3></div></div>
+              <div class="quick-actions-grid">
+                <button data-open-add><span class="quick-icon">+</span><strong>Novo mentorado</strong><small>Cadastrar uma pessoa</small></button>
+                <button data-go="sessions"><span class="quick-icon">✓</span><strong>Marcar sessão</strong><small>Atualizar a tabela</small></button>
+                <button data-go="agenda"><span class="quick-icon">▦</span><strong>Ver agenda</strong><small>Consultar datas</small></button>
+                <button id="quickExport"><span class="quick-icon">↓</span><strong>Gerar Excel</strong><small>Relatório organizado</small></button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-mentees">
+          <div class="section-intro">
+            <div><span class="panel-kicker">PESSOAS</span><h2>Mentorados</h2><p>Pesquise, filtre e atualize os dados de cada participante.</p></div>
+            <button class="btn btn-primary" data-open-add><svg><use href="#i-plus"/></svg>Adicionar mentorado</button>
+          </div>
+          <div class="toolbar-card">
+            <label class="search-box"><svg><use href="#i-search"/></svg><input id="searchInput" type="search" placeholder="Pesquisar nome, e-mail, telefone ou empresa..." /></label>
+            <select id="companyFilter" class="filter-select"><option value="">Todas as empresas</option></select>
+            <select id="statusFilter" class="filter-select"><option value="">Todos os estados</option><option value="not-started">Não iniciado</option><option value="in-progress">Em andamento</option><option value="completed">Concluído</option></select>
+            <button class="btn btn-soft" id="clearMenteeFilters">Limpar filtros</button>
+          </div>
+          <div class="table-card">
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead><tr><th>Mentorado</th><th>Empresa</th><th>Progresso</th><th>Próximo passo</th><th>Estado</th><th class="actions-col">Ações</th></tr></thead>
+                <tbody id="menteesTableBody"></tbody>
+              </table>
+            </div>
+            <div class="table-footer"><span id="tableCount">0 registos</span><span>Dica: use ✓ para concluir rapidamente a próxima sessão.</span></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-sessions">
+          <div class="section-intro">
+            <div><span class="panel-kicker">VISÃO AMPLA</span><h2>Tabela de sessões</h2><p>Uma visão grande, horizontal e editável de todas as marcações.</p></div>
+            <div class="intro-actions"><button class="btn btn-soft" id="markLegendBtn">Como marcar?</button><button class="btn btn-primary" data-open-add><svg><use href="#i-plus"/></svg>Novo mentorado</button></div>
+          </div>
+          <div class="toolbar-card matrix-toolbar">
+            <label class="search-box"><svg><use href="#i-search"/></svg><input id="sessionSearch" type="search" placeholder="Pesquisar mentorado ou empresa..." /></label>
+            <select id="sessionCompanyFilter" class="filter-select"><option value="">Todas as empresas</option></select>
+            <select id="sessionStatusFilter" class="filter-select"><option value="">Todos os estados</option><option value="not-started">Não iniciado</option><option value="in-progress">Em andamento</option><option value="completed">Concluído</option></select>
+            <label class="compact-toggle"><input type="checkbox" id="compactMatrix" /><span>Modo compacto</span></label>
+          </div>
+          <div class="legend-strip" id="sessionLegend">
+            <span><i class="legend-dot done"></i><strong>Concluída:</strong> escreva “ok”</span>
+            <span><i class="legend-dot scheduled"></i><strong>Agendada:</strong> escreva a data e hora</span>
+            <span><i class="legend-dot pending"></i><strong>Pendência:</strong> escreva a observação</span>
+            <span><i class="legend-dot empty"></i><strong>Vazia:</strong> ainda não marcada</span>
+          </div>
+          <div class="matrix-card" id="matrixCard">
+            <div class="matrix-scroll"><table class="session-matrix" id="sessionMatrix"></table></div>
+            <div class="table-footer"><span id="matrixCount">0 mentorados</span><span>As alterações são guardadas automaticamente ao sair do campo.</span></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-agenda">
+          <div class="section-intro">
+            <div><span class="panel-kicker">CRONOGRAMA</span><h2>Agenda e marcações</h2><p>Alterne entre calendário e tabela para consultar todas as datas e pendências.</p></div>
+            <div class="segmented" role="group" aria-label="Modo da agenda"><button class="active" data-agenda-mode="calendar">Calendário</button><button data-agenda-mode="table">Tabela completa</button></div>
+          </div>
+
+          <div class="agenda-controls">
+            <div class="month-navigation"><button class="icon-button" id="prevMonth" aria-label="Mês anterior"><svg><use href="#i-chevron-left"/></svg></button><strong id="calendarMonthLabel"></strong><button class="icon-button" id="nextMonth" aria-label="Próximo mês"><svg><use href="#i-chevron-right"/></svg></button><button class="btn btn-soft" id="todayBtn">Hoje</button></div>
+            <div class="agenda-filters"><label class="search-box small"><svg><use href="#i-search"/></svg><input id="agendaSearch" type="search" placeholder="Pesquisar marcações..." /></label><select id="agendaCompanyFilter" class="filter-select"><option value="">Todas as empresas</option></select></div>
+          </div>
+
+          <div id="agendaCalendarWrap">
+            <div class="calendar-card"><div class="calendar-weekdays"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div><div class="calendar-grid" id="calendarGrid"></div></div>
+            <article class="panel unscheduled-panel"><div class="panel-head"><div><span class="panel-kicker">SEM DATA EXATA</span><h3>Pendências e marcações não reconhecidas</h3></div></div><div id="undatedAgenda" class="undated-list"></div></article>
+          </div>
+
+          <div id="agendaTableWrap" hidden>
+            <div class="table-card agenda-table-card"><div class="table-scroll"><table class="data-table large-agenda-table"><thead><tr><th>Mentorado</th><th>Empresa</th><th>Origem</th><th>Marcação / pendência</th><th>Data identificada</th><th>Estado</th><th>Ação</th></tr></thead><tbody id="agendaTableBody"></tbody></table></div><div class="table-footer"><span id="agendaTableCount">0 marcações</span><span>Tabela completa de datas, sessões e pendências.</span></div></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-companies">
+          <div class="section-intro"><div><span class="panel-kicker">ORGANIZAÇÕES</span><h2>Empresas participantes</h2><p>Visão consolidada com quantidade de mentorados e progresso médio.</p></div></div>
+          <div id="companiesGrid" class="companies-grid"></div>
+        </section>
+
+        <section class="view" id="view-raw">
+          <div class="section-intro">
+            <div><span class="panel-kicker">PLANILHA</span><h2>Dados originais</h2><p>Área avançada para editar diretamente as células importadas do Excel.</p></div>
+            <div class="intro-actions"><button class="btn btn-soft" id="addRawColumnBtn">+ Coluna</button><button class="btn btn-soft" id="addRawRowBtn">+ Linha</button></div>
+          </div>
+          <div class="advanced-warning"><strong>Modo avançado.</strong> Para tarefas do dia a dia, prefira as telas Mentorados, Tabela de sessões e Agenda.</div>
+          <div class="raw-table-card"><div class="raw-table-scroll"><table class="raw-table" id="rawTable"></table></div></div>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="section-intro"><div><span class="panel-kicker">CONFIGURAÇÕES</span><h2>Dados e integração</h2><p>Faça backups, restaure a base e prepare a sincronização para produção.</p></div></div>
+          <div class="settings-grid">
+            <article class="settings-card">
+              <span class="panel-kicker">BACKUP</span><h3>Gestão do documento</h3><p>Guarde cópias de segurança e restaure os dados quando necessário.</p>
+              <div class="settings-actions"><button class="btn btn-soft" id="backupBtn">Baixar backup JSON</button><button class="btn btn-soft" id="restoreBackupBtn">Restaurar backup</button><input type="file" id="backupInput" accept=".json" hidden /><a class="btn btn-soft" href="document/02.07.2026%20-%20Mentorados%20Atualizada.xlsx" download>Baixar Excel de origem</a><button class="btn btn-danger" id="resetBtn">Restaurar dados iniciais</button></div>
+            </article>
+
+            <article class="settings-card">
+              <span class="panel-kicker">SINCRONIZAÇÃO</span><h3>Conectar a uma API</h3><p>Use o backend AuraEX local ou informe um endpoint remoto protegido.</p>
+              <label class="field-label">URL da API<input type="url" id="apiUrl" placeholder="https://seu-dominio.com/api/mentorados" /></label>
+              <label class="field-label">Token de acesso pessoal (opcional)<input type="password" id="apiToken" autocomplete="off" placeholder="auraex_pat_..." /></label>
+              <label class="check-row"><input type="checkbox" id="autoSync" /> Sincronizar automaticamente ao guardar</label>
+              <div class="settings-actions"><button class="btn btn-primary" id="saveSettingsBtn">Guardar configuração</button><button class="btn btn-soft" id="syncNowBtn">Sincronizar agora</button></div>
+              <div class="api-contract"><strong>Contrato protegido</strong><code>GET /api/mentorados</code><code>POST /api/mentorados</code><small>O navegador usa a sessão. Integrações externas usam Authorization: Bearer &lt;PAT&gt;.</small></div>
+            </article>
+
+            <article class="settings-card full-width mcp-settings-card">
+              <div class="settings-card-heading"><div><span class="panel-kicker">AGENTES E AUTOMAÇÕES</span><h3>Servidor MCP e tokens pessoais</h3><p>Conecte um agente ao AuraEX através do endpoint MCP protegido por Bearer token.</p></div><span class="security-badge">MCP + PAT</span></div>
+              <div class="mcp-endpoint-row"><label class="field-label">Endpoint MCP<input type="text" id="mcpEndpoint" readonly /></label><button class="btn btn-soft" id="copyMcpEndpointBtn"><svg><use href="#i-copy"/></svg>Copiar endpoint</button></div>
+              <div class="token-create-grid">
+                <label class="field-label">Nome do token<input type="text" id="tokenName" maxlength="80" value="Agente AuraEX" /></label>
+                <label class="field-label">Validade<select id="tokenExpiry"><option value="30">30 dias</option><option value="90">90 dias</option><option value="365" selected>1 ano</option><option value="730">2 anos</option></select></label>
+                <label class="check-row token-scope"><input type="checkbox" id="tokenWriteScope" checked /> Permitir alterações (auraex:write)</label>
+                <button class="btn btn-primary" id="createTokenBtn"><svg><use href="#i-key"/></svg>Gerar token pessoal</button>
+              </div>
+              <div class="new-token-panel" id="newTokenPanel" hidden><div><strong>Copie agora: este token só aparece uma vez.</strong><code id="newTokenValue"></code></div><div class="settings-actions"><button class="btn btn-primary" id="copyNewTokenBtn">Copiar token</button><button class="btn btn-soft" id="hideNewTokenBtn">Ocultar</button></div></div>
+              <div class="token-list" id="tokenList"><div class="empty-state">A carregar tokens...</div></div>
+            </article>
+
+            <article class="settings-card full-width">
+              <span class="panel-kicker">CONTA</span><h3>Alterar senha</h3><p>Após a troca, todas as sessões atuais serão encerradas e será necessário entrar novamente.</p>
+              <form id="passwordForm" class="password-settings-form">
+                <label class="field-label">Senha atual<input type="password" id="currentPassword" autocomplete="current-password" required /></label>
+                <label class="field-label">Nova senha<input type="password" id="newPassword" autocomplete="new-password" minlength="12" required /></label>
+                <label class="field-label">Confirmar nova senha<input type="password" id="confirmPassword" autocomplete="new-password" minlength="12" required /></label>
+                <button class="btn btn-primary" id="changePasswordBtn" type="submit">Alterar senha</button>
+              </form>
+            </article>
+
+            <article class="settings-card full-width">
+              <span class="panel-kicker">EXPERIÊNCIA</span><h3>Ajuda para novos utilizadores</h3><p>O guia inicial pode ser reaberto a qualquer momento.</p>
+              <div class="settings-actions"><button class="btn btn-soft" id="reopenOnboardingBtn">Abrir guia inicial</button><button class="btn btn-soft" id="resetOnboardingBtn">Mostrar novamente no próximo acesso</button></div>
+            </article>
+
+            <article class="settings-card full-width">
+              <span class="panel-kicker">SOBRE</span><h3>Como esta versão funciona</h3>
+              <div class="info-grid"><div><strong>Login seguro</strong><span>Sessão protegida por cookie HttpOnly.</span></div><div><strong>Gestão simplificada</strong><span>Telas guiadas e ajuda contextual.</span></div><div><strong>Tabela grande</strong><span>Sessões editáveis numa visão horizontal.</span></div><div><strong>Excel profissional</strong><span>Exportação organizada com várias abas.</span></div><div><strong>API protegida</strong><span>Sessão no navegador e PAT nas integrações.</span></div><div><strong>MCP integrado</strong><span>Ferramentas de leitura e escrita para agentes.</span></div></div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal large-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head"><div><span class="panel-kicker">REGISTO</span><h2 id="modalTitle">Adicionar mentorado</h2></div><button class="icon-button" id="closeModal" aria-label="Fechar"><svg><use href="#i-x"/></svg></button></header>
+      <form id="menteeForm">
+        <input type="hidden" id="editRowIndex" />
+        <div class="form-tabs"><button type="button" class="active" data-form-tab="basic">1. Dados básicos</button><button type="button" data-form-tab="sessions">2. Sessões</button><button type="button" data-form-tab="followup">3. Acompanhamento</button></div>
+        <div class="form-step active" data-form-panel="basic">
+          <div class="form-grid"><label>Nome completo *<input id="formName" required autocomplete="name" /></label><label>Empresa<input id="formCompany" /></label><label>E-mail<input id="formEmail" type="email" autocomplete="email" /></label><label>Telefone<input id="formPhone" autocomplete="tel" /></label></div>
+          <div class="form-help">Comece pelos dados básicos. As sessões e observações podem ser preenchidas agora ou depois.</div>
+        </div>
+        <div class="form-step" data-form-panel="sessions"><div class="session-form-grid" id="sessionFields"></div><div class="form-help"><strong>Dica:</strong> escreva <b>ok</b> para uma sessão concluída, uma <b>data/hora</b> para agendada ou uma <b>observação</b> para pendência.</div></div>
+        <div class="form-step" data-form-panel="followup">
+          <div class="form-grid"><label id="previousField">Data anterior<input id="formPrevious" /></label><label id="nextField">Próxima data<input id="formNext" /></label><label id="agendaField">Agenda<input id="formAgenda" /></label><label id="partialField">Avaliação parcial<input id="formPartial" /></label><label id="observationField" class="span-2">Observações<textarea id="formObservation" rows="3"></textarea></label><label>Encerramento<input id="formClosure" /></label><label>Relatório<input id="formReport" /></label></div>
+        </div>
+        <footer class="modal-actions"><button type="button" class="btn btn-danger" id="deleteBtn"><svg><use href="#i-trash"/></svg>Excluir</button><span class="modal-spacer"></span><button type="button" class="btn btn-soft" id="cancelModal">Cancelar</button><button type="submit" class="btn btn-primary"><svg><use href="#i-check"/></svg>Guardar registo</button></footer>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="onboardingBackdrop" hidden>
+    <section class="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+      <button class="onboarding-close" id="closeOnboarding" aria-label="Fechar"><svg><use href="#i-x"/></svg></button>
+      <div class="onboarding-brand"><img src="assets/logo.svg" alt="AuraEX" /><span>Guia rápido</span></div>
+      <div class="onboarding-progress" id="onboardingProgress"></div>
+      <div class="onboarding-content" id="onboardingContent"></div>
+      <div class="onboarding-footer"><label><input type="checkbox" id="dontShowOnboarding" /> Não mostrar novamente</label><div><button class="btn btn-soft" id="onboardingPrev">Anterior</button><button class="btn btn-primary" id="onboardingNext">Continuar</button></div></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="exportBackdrop" hidden>
+    <section class="modal export-modal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+      <header class="modal-head"><div><span class="panel-kicker">EXPORTAÇÃO</span><h2 id="exportTitle">Como deseja gerar o Excel?</h2></div><button class="icon-button" id="closeExportModal" aria-label="Fechar"><svg><use href="#i-x"/></svg></button></header>
+      <div class="export-options">
+        <button id="exportBeautifulBtn" class="export-option recommended"><span class="option-badge">Recomendado</span><span class="option-icon">✦</span><strong>Relatório organizado</strong><small>Gera Resumo, Mentorados, Sessões, Agenda, Empresas e Base original com visual profissional.</small></button>
+        <button id="exportRawBtn" class="export-option"><span class="option-icon">▦</span><strong>Cópia da base original</strong><small>Exporta as planilhas com os dados atuais, mantendo a estrutura de células.</small></button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="legendBackdrop" hidden>
+    <section class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
+      <header class="modal-head"><div><span class="panel-kicker">LEGENDA</span><h2 id="legendTitle">Como preencher as sessões</h2></div><button class="icon-button" id="closeLegend" aria-label="Fechar"><svg><use href="#i-x"/></svg></button></header>
+      <div class="legend-examples"><div><span class="session-demo done">ok</span><p><strong>Concluída</strong> — use “ok”, “concluído” ou “realizada”.</p></div><div><span class="session-demo scheduled">10/08 - 14h</span><p><strong>Agendada</strong> — informe uma data e, se possível, a hora.</p></div><div><span class="session-demo pending">Aguardando retorno</span><p><strong>Pendência</strong> — escreva a ação ou observação necessária.</p></div><div><span class="session-demo empty">vazio</span><p><strong>Não iniciada</strong> — deixe o campo em branco.</p></div></div>
+    </section>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="vendor/jszip.min.js"></script>
+  <script src="data/initial-data.js"></script>
+  <script src="excel-bridge.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

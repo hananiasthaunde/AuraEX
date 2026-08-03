@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ff5a1f" />
+  <meta name="description" content="Acesso seguro ao AuraEX — Gestão de Mentorias." />
+  <title>Entrar • AuraEX</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="login.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --primary: #ff5a1f;
+      --primary-dark: #e74b12;
+      --ink: #2f3035;
+      --ink-soft: #66676b;
+      --muted: #92939a;
+      --line: #e5e5e8;
+      --surface: #fff;
+      --background: #f6f6f7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { 
+      min-height: 100vh; 
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body { 
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+      font-weight: 400;
+      color: var(--ink); 
+      background: #f4f4f6;
+      -webkit-font-smoothing: antialiased; 
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    h1, h2, h3, h4, h5, h6, b, strong { font-weight: 500; }
+    button, input { font: inherit; font-weight: 400; }
+
+    .login-wrapper {
+      width: 100%;
+      min-height: 100vh;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px 16px;
+    }
+
+    .login-card { 
+      width: 100% !important;
+      max-width: 480px !important; 
+      padding: 24px 36px 20px !important; 
+      background: #ffffff !important; 
+      border: 1px solid var(--line) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 12px 36px rgba(39, 40, 44, .06) !important;
+      margin: auto !important; 
+    }
+
+    .logo-wrap {
+      display: flex !important;
+      justify-content: center !important;
+      margin-bottom: 8px !important;
+    }
+
+    .login-logo { 
+      width: 160px !important; 
+      height: 52px !important; 
+      object-fit: contain !important; 
+    }
+
+    .login-heading {
+      text-align: center !important;
+      margin-bottom: 14px !important;
+    }
+
+    .login-heading span { 
+      color: var(--primary); 
+      font-size: 10px; 
+      font-weight: 500; 
+      letter-spacing: .1em; 
+      text-transform: uppercase; 
+    }
+
+    .login-heading h2 { 
+      margin: 4px 0 2px; 
+      font-size: 26px !important; 
+      font-weight: 500; 
+      line-height: 1.15; 
+      letter-spacing: -.03em; 
+    }
+
+    .login-heading p { 
+      color: var(--muted); 
+      font-size: 12.5px; 
+      line-height: 1.4; 
+      font-weight: 400; 
+    }
+
+    form { 
+      display: grid !important; 
+      gap: 14px !important; 
+      width: 100% !important; 
+    }
+
+    form label > span { 
+      display: block; 
+      margin-bottom: 5px; 
+      color: var(--ink-soft); 
+      font-size: 11px; 
+      font-weight: 450; 
+    }
+
+    .field-wrap { 
+      height: 44px !important; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      padding: 0 14px; 
+      border: 1px solid var(--line); 
+      background: var(--surface); 
+      border-radius: 10px; 
+      transition: .2s ease; 
+      box-shadow: 0 2px 6px rgba(39,40,44,.02); 
+    }
+
+    .field-wrap:focus-within { 
+      border-color: #ffad8d; 
+      box-shadow: 0 0 0 3px rgba(255,90,31,.08); 
+    }
+
+    .field-wrap svg { 
+      width: 16px; 
+      height: 16px; 
+      fill: none; 
+      stroke: #9b9ca2; 
+      stroke-width: 1.5; 
+      stroke-linecap: round; 
+      stroke-linejoin: round; 
+      flex: none; 
+    }
+
+    .field-wrap input { 
+      min-width: 0; 
+      flex: 1; 
+      border: 0; 
+      outline: 0; 
+      background: transparent; 
+      color: var(--ink); 
+      font-size: 13px; 
+      font-weight: 400; 
+    }
+
+    .field-wrap input::placeholder { 
+      color: #b4b4b9; 
+    }
+
+    .password-toggle { 
+      border: 0; 
+      background: transparent; 
+      color: var(--muted); 
+      display: inline-grid;
+      place-items: center;
+      padding: 4px; 
+      cursor: pointer; 
+      transition: color .18s ease;
+    }
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    .login-btn-wrap {
+      display: flex !important;
+      justify-content: center !important;
+      margin-top: 4px !important;
+    }
+
+    .login-button { 
+      height: 42px !important; 
+      width: 100% !important; 
+      max-width: 220px !important;
+      padding: 0 16px !important; 
+      border: 0; 
+      border-radius: 10px !important; 
+      display: inline-flex !important; 
+      align-items: center !important; 
+      justify-content: center !important; 
+      color: #fff; 
+      background: var(--primary); 
+      font-weight: 450; 
+      font-size: 13px !important; 
+      box-shadow: 0 3px 12px rgba(255,90,31,.18); 
+      transition: .18s ease; 
+      cursor: pointer; 
+    }
+
+    .login-button:hover { 
+      background: var(--primary-dark); 
+      transform: translateY(-1px); 
+    }
+
+    .login-button:disabled { 
+      cursor: wait; 
+      opacity: .7; 
+      transform: none; 
+    }
+
+    .login-message { 
+      padding: 10px 12px; 
+      margin-top: -4px; 
+      border-radius: 9px; 
+      color: #a43434; 
+      background: #fff0f0; 
+      border: 1px solid #ffd3d3; 
+      font-size: 11.5px; 
+      line-height: 1.4; 
+      font-weight: 400; 
+    }
+
+    .panel-footer { 
+      width: 100%; 
+      margin-top: 20px !important; 
+      color: #aaaab0; 
+      font-size: 10.5px; 
+      text-align: center; 
+      font-weight: 400; 
+    }
+
+    @media (max-width: 480px) { 
+      .login-card { padding: 20px 18px 16px !important; border-radius: 16px !important; }
+      .login-logo { width: 140px !important; height: 46px !important; }
+      .login-heading h2 { font-size: 22px !important; }
+      .login-button { max-width: 100% !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="logo-wrap">
+        <img src="assets/logo.svg" class="login-logo" alt="AuraEX" />
+      </div>
+      
+      <div class="login-heading">
+        <span>ACESSO PROTEGIDO</span>
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre com as credenciais fornecidas pelo administrador.</p>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <label>
+          <span>E-mail</span>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 7l8 6 8-6"/></svg>
+            <input id="email" name="email" type="email" autocomplete="username" placeholder="nome@empresa.com" required />
+          </div>
+        </label>
+        
+        <label>
+          <span>Senha</span>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Digite a sua senha" required />
+            <button type="button" id="togglePassword" class="password-toggle" aria-label="Mostrar senha" title="Mostrar/ocultar senha">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </label>
+
+        <div id="loginMessage" class="login-message" role="alert" hidden></div>
+        <div class="login-btn-wrap">
+          <button type="submit" id="loginButton" class="login-button"><span>Entrar no AuraEX</span></button>
+        </div>
+      </form>
+
+      <footer class="panel-footer">SBDC © 2026 • AuraEX 3.0</footer>
+    </div>
+  </div>
+  <script src="login.js" defer></script>
+</body>
+</html>

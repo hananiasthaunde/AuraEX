@@ -28,6 +28,7 @@ import {
 } from './lib/security.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = fs.existsSync(path.join(ROOT, 'public')) ? path.join(ROOT, 'public') : ROOT;
 loadDotEnv(path.join(ROOT, '.env'));
 
 let mcpHandler;
@@ -364,12 +365,12 @@ export async function handleRequest(req, res) {
 
     if (pathname === '/login' || pathname === '/login.html') {
       if (authenticateSession(req)) return redirect(res, '/');
-      return serveFile(req, res, path.join(ROOT, 'login.html'), { noCache: true });
+      return serveFile(req, res, path.join(PUBLIC_DIR, 'login.html'), { noCache: true });
     }
 
     if (pathname === '/') {
       if (!authenticateSession(req)) return redirect(res, '/login.html');
-      return serveFile(req, res, path.join(ROOT, 'index.html'), { noCache: true });
+      return serveFile(req, res, path.join(PUBLIC_DIR, 'index.html'), { noCache: true });
     }
 
     if (BLOCKED_PATHS.some(blocked => pathname === blocked || pathname.startsWith(blocked))) return sendJson(req, res, 403, { error: 'Acesso negado.' });
@@ -379,8 +380,8 @@ export async function handleRequest(req, res) {
       return redirect(res, '/login.html');
     }
 
-    const candidate = path.resolve(ROOT, `.${pathname}`);
-    if (!candidate.startsWith(`${ROOT}${path.sep}`)) return sendJson(req, res, 403, { error: 'Acesso negado.' });
+    const candidate = path.resolve(PUBLIC_DIR, `.${pathname}`);
+    if (!candidate.startsWith(`${PUBLIC_DIR}${path.sep}`) && candidate !== PUBLIC_DIR) return sendJson(req, res, 403, { error: 'Acesso negado.' });
     return serveFile(req, res, candidate, { noCache: true });
   } catch (error) {
     const status = error.statusCode || 500;
