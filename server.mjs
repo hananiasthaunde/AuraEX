@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
-import { readWorkbook, validateWorkbook, writeWorkbook } from './lib/data-store.mjs';
+import { readWorkbook, readWorkbookAsync, validateWorkbook, writeWorkbook } from './lib/data-store.mjs';
 import {
   assertLoginAllowed,
   audit,
@@ -331,7 +331,7 @@ async function handleWorkbookApi(req, res) {
     const auth = requireApiAuth(req, res, 'auraex:read');
     if (!auth) return;
     audit(req, 'workbook.read', {}, { ...auth.user, type: auth.type });
-    return sendJson(req, res, 200, readWorkbook());
+    return sendJson(req, res, 200, await readWorkbookAsync());
   }
 
   if (req.method === 'POST') {
