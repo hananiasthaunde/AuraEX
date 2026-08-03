@@ -10,16 +10,10 @@ function loadServer() {
 }
 
 function sendError(res, error, phase) {
+  // O detalhe fica nos logs da plataforma; a resposta pública não o expõe.
   console.error(`[AuraEX] Falha na fase "${phase}":`, error);
   if (res.headersSent) return res.end();
-  const body = JSON.stringify({
-    error: 'Falha ao inicializar a aplicação.',
-    phase,
-    name: error?.name || null,
-    code: error?.code || null,
-    message: error?.message || String(error),
-    frames: String(error?.stack || '').split('\n').slice(1, 5).map(line => line.trim())
-  });
+  const body = JSON.stringify({ error: 'Erro interno do servidor.', phase });
   res.writeHead(500, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
