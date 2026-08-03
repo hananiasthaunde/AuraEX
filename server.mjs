@@ -29,6 +29,9 @@ import {
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = fs.existsSync(path.join(ROOT, 'public')) ? path.join(ROOT, 'public') : ROOT;
+// O shell autenticado fica fora de public/ para que o CDN do Vercel não o possa
+// servir sem passar pela verificação de sessão desta função.
+const VIEWS_DIR = fs.existsSync(path.join(ROOT, 'views')) ? path.join(ROOT, 'views') : PUBLIC_DIR;
 loadDotEnv(path.join(ROOT, '.env'));
 
 let mcpHandler;
@@ -43,11 +46,25 @@ try {
 
 const PORT = Number(process.env.AURAEX_PORT || process.env.PORT || 8080);
 const BIND = process.env.AURAEX_BIND || '127.0.0.1';
-const PUBLIC_URL = process.env.AURAEX_PUBLIC_URL || `http://${BIND}:${PORT}`;
+
+// O Vercel injeta o domínio do deployment; sem isto os defaults apontariam para
+// 127.0.0.1 e o /mcp responderia sempre 403 em produção.
+const VERCEL_HOSTS = [process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_URL]
+  .map(value => String(value || '').trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '').toLowerCase())
+  .filter(Boolean);
+
+const PUBLIC_URL = process.env.AURAEX_PUBLIC_URL
+  || (VERCEL_HOSTS.length ? `https://${VERCEL_HOSTS[0]}` : `http://${BIND}:${PORT}`);
 const MAX_BODY = 20 * 1024 * 1024;
 const LOGIN_MAX_BODY = 64 * 1024;
-const ALLOWED_HOSTS = new Set(String(process.env.AURAEX_ALLOWED_HOSTS || '127.0.0.1,localhost').split(',').map(value => value.trim().toLowerCase()).filter(Boolean));
-const ALLOWED_ORIGINS = new Set(String(process.env.AURAEX_ALLOWED_ORIGINS || PUBLIC_URL).split(',').map(value => value.trim()).filter(Boolean));
+const ALLOWED_HOSTS = new Set([
+  ...String(process.env.AURAEX_ALLOWED_HOSTS || '127.0.0.1,localhost').split(',').map(value => value.trim().toLowerCase()).filter(Boolean),
+  ...VERCEL_HOSTS
+]);
+const ALLOWED_ORIGINS = new Set([
+  ...String(process.env.AURAEX_ALLOWED_ORIGINS || PUBLIC_URL).split(',').map(value => value.trim()).filter(Boolean),
+  ...VERCEL_HOSTS.map(host => `https://${host}`)
+]);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -189,18 +206,18 @@ async function handleAuth(req, res, pathname) {
     const body = await readJsonBody(req, LOGIN_MAX_BODY);
     const email = String(body.email || '').trim().toLowerCase();
     const password = String(body.password || '');
-    const limit = assertLoginAllowed(req, email);
+    const limit = await assertLoginAllowed(req, email);
     if (!limit.allowed) return sendJson(req, res, 429, { error: 'Muitas tentativas. Tente novamente mais tarde.', retryAfterSeconds: limit.retryAfterSeconds }, { 'Retry-After': String(limit.retryAfterSeconds) });
     const user = findUserByEmail(email);
     if (!user || !verifyPassword(password, user.password)) {
-      recordLoginFailure(req, email);
+      await recordLoginFailure(req, email);
       audit(req, 'auth.login_failed', { email });
       return sendJson(req, res, 401, { error: 'E-mail ou senha incorretos.' });
     }
-    clearLoginFailures(req, email);
+    await clearLoginFailures(req, email);
     const session = createSession(user);
     audit(req, 'auth.login_success', {}, { id: user.id, email: user.email, type: 'user' });
-    return sendJson(req, res, 200, sessionPayload({ type: 'session', user: { id: user.id, name: user.name, email: user.email, role: user.role }, session }), { 'Set-Cookie': sessionCookie(session.id) });
+    return sendJson(req, res, 200, sessionPayload({ type: 'session', user: { id: user.id, name: user.name, email: user.email, role: user.role }, session }), { 'Set-Cookie': sessionCookie(session.token) });
   }
 
   if (pathname === '/api/auth/logout' && req.method === 'POST') {
@@ -273,11 +290,28 @@ async function handleWorkbookApi(req, res) {
   return sendJson(req, res, 405, { error: 'Método não permitido.' });
 }
 
+// O nome do ficheiro tem data e pode ser substituído; procura nos locais
+// plausíveis em vez de assumir um único caminho fixo na raiz.
+const EXPORT_FILE_NAMES = [
+  '02.07.2026 - Mentorados Atualizada (Visualmente Aprimorada).xlsx',
+  '02.07.2026 - Mentorados Atualizada.xlsx'
+];
+
+function resolveExportFile() {
+  for (const dir of [path.join(ROOT, 'storage'), ROOT]) {
+    for (const name of EXPORT_FILE_NAMES) {
+      const candidate = path.join(dir, name);
+      if (fs.existsSync(candidate)) return candidate;
+    }
+  }
+  return null;
+}
+
 function handleExportExcelApi(req, res) {
   const auth = requireApiAuth(req, res, 'auraex:read');
   if (!auth) return;
-  const filePath = path.join(ROOT, '02.07.2026 - Mentorados Atualizada (Visualmente Aprimorada).xlsx');
-  if (!fs.existsSync(filePath)) return sendJson(req, res, 404, { error: 'Ficheiro não encontrado.' });
+  const filePath = resolveExportFile();
+  if (!filePath) return sendJson(req, res, 404, { error: 'Ficheiro não encontrado.' });
   audit(req, 'workbook.export', { type: 'beautiful' }, { ...auth.user, type: auth.type });
   res.writeHead(200, securityHeaders({
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -359,6 +393,13 @@ export async function handleRequest(req, res) {
     if (pathname === '/api/mentorados') return handleWorkbookApi(req, res);
     if (pathname === '/api/export/excel') return handleExportExcelApi(req, res);
 
+    // Servido pela função em todos os ambientes: é o gate de sessão do shell.
+    if (pathname === '/' || pathname === '/index.html') {
+      if (!authenticateSession(req)) return redirect(res, '/login.html');
+      return serveFile(req, res, path.join(VIEWS_DIR, 'index.html'), { noCache: true });
+    }
+
+    // No Vercel os restantes estáticos são entregues pelo CDN a partir de public/.
     if (process.env.VERCEL) {
       return sendJson(req, res, 404, { error: 'Rota não encontrada.' });
     }
@@ -366,11 +407,6 @@ export async function handleRequest(req, res) {
     if (pathname === '/login' || pathname === '/login.html') {
       if (authenticateSession(req)) return redirect(res, '/');
       return serveFile(req, res, path.join(PUBLIC_DIR, 'login.html'), { noCache: true });
-    }
-
-    if (pathname === '/') {
-      if (!authenticateSession(req)) return redirect(res, '/login.html');
-      return serveFile(req, res, path.join(PUBLIC_DIR, 'index.html'), { noCache: true });
     }
 
     if (BLOCKED_PATHS.some(blocked => pathname === blocked || pathname.startsWith(blocked))) return sendJson(req, res, 403, { error: 'Acesso negado.' });

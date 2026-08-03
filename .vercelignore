@@ -2,6 +2,16 @@ scratch/
 scripts/
 document/
 exemplo/
-*.xlsx
+docs/
 *.py
 PROMPT_PARA_AGENTE_DE_PROGRAMACAO.md
+README.md
+Dockerfile
+docker-compose.yml
+INICIAR_AURAEX.bat
+iniciar-auraex.sh
+
+# Só o ficheiro servido por /api/export/excel precisa de ir no bundle.
+02.07.2026 - Mentorados Atualizada (1).xlsx
+02.07.2026 - Mentorados Atualizada (Visualmente Aprimorada) (Editado).xlsx
+02.07.2026 - Mentorados Atualizada (Visualmente Aprimorada) Verde.xlsx
