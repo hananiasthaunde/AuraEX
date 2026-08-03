@@ -422,17 +422,19 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .onboarding-close svg { width: 20px; height: 20px; }
 .onboarding-brand { display: flex; align-items: center; gap: 10px; }
 .onboarding-brand img { width: 140px; }
-.onboarding-brand span { padding: 4px 8px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 9.5px; font-weight: 500; }
+.onboarding-brand span { padding: 5px 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 500; }
 .onboarding-progress { display: flex; gap: 5px; margin: 18px 0 16px; }
 .onboarding-progress i { height: 4px; flex: 1; border-radius: 99px; background: #ececef; }
 .onboarding-progress i.active { background: var(--primary); }
 .onboarding-content { min-height: 300px; }
 .onboarding-slide { display: grid; grid-template-columns: 1.05fr .95fr; gap: 20px; align-items: center; }
 .onboarding-slide h2 { margin: 0 0 8px; font-size: 26px; font-weight: 500; letter-spacing: -.03em; line-height: 1.1; }
-.onboarding-slide p { color: var(--muted); line-height: 1.5; font-size: 12px; font-weight: 400; }
-.onboarding-list { display: grid; gap: 8px; margin-top: 14px; }
-.onboarding-list div { display: flex; gap: 8px; align-items: flex-start; color: var(--ink-soft); font-size: 11px; font-weight: 400; }
-.onboarding-list b { width: 20px; height: 20px; border-radius: 6px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; flex: none; font-weight: 500; font-size: 10px; }
+.onboarding-slide p { color: var(--muted); line-height: 1.55; font-size: 14.5px; font-weight: 400; }
+/* Sobrepõe a classe global só dentro do guia, para não mexer no resto da aplicação. */
+.onboarding-slide .panel-kicker { font-size: 12px; }
+.onboarding-list { display: grid; gap: 10px; margin-top: 16px; }
+.onboarding-list div { display: flex; gap: 10px; align-items: flex-start; color: var(--ink-soft); font-size: 13.5px; line-height: 1.45; font-weight: 400; }
+.onboarding-list b { width: 24px; height: 24px; border-radius: 7px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; flex: none; font-weight: 500; font-size: 12px; }
 .onboarding-art { min-height: 250px; border-radius: 16px; background: linear-gradient(145deg, #fff4ee, #f8f8f9); border: 1px solid #ffe0d3; display: grid; place-items: center; padding: 16px; overflow: hidden; }
 .art-dashboard { width: 100%; display: grid; gap: 8px; transform: rotate(-2deg); }
 .art-bar { height: 38px; border-radius: 99px; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; padding: 0 10px; gap: 6px; }
@@ -447,7 +449,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .art-excel h4 { margin: 0 0 8px; color: var(--primary); font-weight: 500; }
 .art-excel div { height: 16px; border-bottom: 1px solid var(--line); }
 .onboarding-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
-.onboarding-footer label { color: var(--muted); font-size: 10.5px; display: inline-flex; align-items: center; gap: 6px; font-weight: 400; }
+.onboarding-footer label { color: var(--muted); font-size: 13px; display: inline-flex; align-items: center; gap: 7px; font-weight: 400; }
 .onboarding-footer input { accent-color: var(--primary); }
 .onboarding-footer > div { display: flex; gap: 8px; }
 
