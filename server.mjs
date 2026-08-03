@@ -439,6 +439,13 @@ export async function handleRequest(req, res) {
   }
 }
 
+// O Vercel escolhe o entrypoint por convenção de nome na raiz (app.js,
+// server.js, server.mjs) e ignora o que o vercel.json declara em `functions`.
+// Sem um export default o runtime não encontra nada para invocar e mata o
+// processo com "No exports found in module". O handler tem a assinatura
+// (req, res) que o runtime espera.
+export default handleRequest;
+
 const server = http.createServer(handleRequest);
 
 if (!process.env.VERCEL) {

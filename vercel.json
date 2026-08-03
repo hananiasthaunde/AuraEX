@@ -1,6 +1,11 @@
 {
   "version": 2,
   "functions": {
+    "server.mjs": {
+      "memory": 1024,
+      "maxDuration": 15,
+      "includeFiles": "**"
+    },
     "api/index.js": {
       "memory": 1024,
       "maxDuration": 15,
