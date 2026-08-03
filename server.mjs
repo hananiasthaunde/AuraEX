@@ -34,14 +34,23 @@ const PUBLIC_DIR = fs.existsSync(path.join(ROOT, 'public')) ? path.join(ROOT, 'p
 const VIEWS_DIR = fs.existsSync(path.join(ROOT, 'views')) ? path.join(ROOT, 'views') : PUBLIC_DIR;
 loadDotEnv(path.join(ROOT, '.env'));
 
-let mcpHandler;
+// Nenhuma destas importações pode derrubar o arranque: se o MCP não carregar,
+// o endpoint /mcp degrada para 503 mas a aplicação web continua a servir.
+let mcpHandler = null;
 let mcpImplementation = 'official-sdk-v2';
+let mcpLoadError = null;
 try {
   ({ mcpHandler } = await import('./mcp.mjs'));
 } catch (error) {
-  ({ mcpFallbackHandler: mcpHandler } = await import('./mcp-fallback.mjs'));
-  mcpImplementation = 'builtin-fallback';
-  console.warn('[AuraEX] SDK MCP oficial não instalado; usando implementação compatível embutida. Execute npm install para ativar o SDK v2.');
+  try {
+    ({ mcpFallbackHandler: mcpHandler } = await import('./mcp-fallback.mjs'));
+    mcpImplementation = 'builtin-fallback';
+    console.warn('[AuraEX] SDK MCP oficial indisponível; usando implementação compatível embutida:', error.message);
+  } catch (fallbackError) {
+    mcpImplementation = 'indisponivel';
+    mcpLoadError = fallbackError;
+    console.error('[AuraEX] Nenhuma implementação MCP pôde ser carregada:', fallbackError.message);
+  }
 }
 
 const PORT = Number(process.env.AURAEX_PORT || process.env.PORT || 8080);
@@ -345,6 +354,9 @@ async function sendWebResponse(res, response) {
 }
 
 async function handleMcp(req, res) {
+  if (!mcpHandler) {
+    return sendJson(req, res, 503, { error: 'Servidor MCP indisponível nesta implantação.', detail: mcpLoadError?.message });
+  }
   if (!isAllowedHost(req)) return sendJson(req, res, 403, { error: 'Host não permitido.' });
   if (!isAllowedOrigin(req.headers.origin)) return sendJson(req, res, 403, { error: 'Origem não permitida.' });
   if (req.method === 'OPTIONS') return handleOptions(req, res);
@@ -375,7 +387,7 @@ export async function handleRequest(req, res) {
     if (req.method === 'OPTIONS' && (pathname.startsWith('/api/') || pathname === '/mcp')) return handleOptions(req, res);
 
     if (pathname === '/health') {
-      return sendJson(req, res, 200, { ok: true, app: 'AuraEX', version: '3.0.0', auth: true, mcp: true, mcpImplementation, time: new Date().toISOString() });
+      return sendJson(req, res, 200, { ok: true, app: 'AuraEX', version: '3.0.0', auth: true, mcp: Boolean(mcpHandler), mcpImplementation, time: new Date().toISOString() });
     }
 
     if (pathname === '/.well-known/oauth-protected-resource/mcp') {
@@ -442,7 +454,7 @@ if (!process.env.VERCEL) {
   async function shutdown(signal) {
     console.log(`\nRecebido ${signal}. A encerrar...`);
     server.close();
-    await mcpHandler.close();
+    await mcpHandler?.close();
     process.exit(0);
   }
 
