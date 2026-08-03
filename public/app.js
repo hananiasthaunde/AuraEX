@@ -67,6 +67,7 @@
     navigate('overview');
     if (settings.apiUrl) await loadFromApiOnStart();
     await loadTokens();
+    await loadAccounts();
     if (localStorage.getItem(ONBOARDING_KEY) !== 'true') setTimeout(() => openOnboarding(), 350);
   }
 
@@ -85,6 +86,7 @@
       'mcpEndpoint','copyMcpEndpointBtn','tokenName',
       'tokenExpiry','tokenWriteScope','createTokenBtn','newTokenPanel','newTokenValue','copyNewTokenBtn','hideNewTokenBtn',
       'tokenList','passwordForm','currentPassword','newPassword','confirmPassword','changePasswordBtn',
+      'newUserName','newUserEmail','newUserPassword','newUserRole','createUserBtn','userList',
       'modalBackdrop','closeModal','cancelModal','menteeForm','editRowIndex','formName','formCompany','formEmail',
       'formPhone','formPrevious','formNext','formObservation','formPartial','formAgenda','formClosure','formReport',
       'previousField','nextField','observationField','partialField','agendaField','sessionFields','deleteBtn','modalTitle',
@@ -109,6 +111,15 @@
     els.hideNewTokenBtn.addEventListener('click', () => { els.newTokenPanel.hidden = true; els.newTokenValue.textContent = ''; });
     els.tokenList.addEventListener('click', event => { const button = event.target.closest('[data-revoke-token]'); if (button) revokePersonalToken(button.dataset.revokeToken); });
     els.passwordForm.addEventListener('submit', changeAccountPassword);
+    els.createUserBtn.addEventListener('click', createAccount);
+    els.userList.addEventListener('click', event => {
+      const toggle = event.target.closest('[data-toggle-user]');
+      if (toggle) return setAccountActive(toggle.dataset.toggleUser, toggle.dataset.nextActive === 'true');
+      const reset = event.target.closest('[data-reset-user]');
+      if (reset) return resetAccountPassword(reset.dataset.resetUser, reset.dataset.userName);
+      const remove = event.target.closest('[data-delete-user]');
+      if (remove) return deleteAccount(remove.dataset.deleteUser, remove.dataset.userName);
+    });
     els.helpBtn.addEventListener('click', () => openOnboarding(true));
     els.sidebarHelpBtn.addEventListener('click', () => openOnboarding(true));
     els.reopenOnboardingBtn.addEventListener('click', () => openOnboarding(true));
@@ -1093,6 +1104,119 @@
       toast('Token revogado.', 'success');
     } catch (error) {
       toast(`Falha ao revogar: ${error.message}`, 'error');
+    }
+  }
+
+  async function loadAccounts() {
+    if (!els.userList) return;
+    if (authSession?.user?.role !== 'admin') {
+      els.userList.innerHTML = '<div class="empty-state">Apenas administradores podem gerir utilizadores.</div>';
+      return;
+    }
+    try {
+      const response = await apiFetch('/api/users', { headers: { Accept: 'application/json' } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      renderAccounts(data.users || []);
+    } catch (error) {
+      els.userList.innerHTML = `<div class="empty-state">Falha ao carregar utilizadores: ${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  function renderAccounts(users) {
+    if (!users.length) {
+      els.userList.innerHTML = '<div class="empty-state">Nenhum utilizador registado.</div>';
+      return;
+    }
+    const myId = authSession?.user?.id;
+    els.userList.innerHTML = users.map(user => {
+      const self = user.id === myId;
+      const papel = user.role === 'admin' ? 'Administrador' : 'Utilizador';
+      const estado = user.active ? 'Ativo' : 'Desativado';
+      return `<div class="user-row ${user.active ? '' : 'inactive'}">
+        <div><strong>${escapeHtml(user.name)}${self ? ' (você)' : ''}</strong><small>${escapeHtml(user.email)}</small></div>
+        <div><span class="user-role">${escapeHtml(papel)}</span></div>
+        <div><strong>${escapeHtml(estado)}</strong><small>criado em ${formatDateTime(user.createdAt)}</small></div>
+        <div class="settings-actions">
+          <button class="btn btn-soft" data-reset-user="${escapeAttr(user.id)}" data-user-name="${escapeAttr(user.name)}">Redefinir senha</button>
+          ${self ? '' : `<button class="btn btn-soft" data-toggle-user="${escapeAttr(user.id)}" data-next-active="${user.active ? 'false' : 'true'}">${user.active ? 'Desativar' : 'Reativar'}</button>
+          <button class="btn btn-danger" data-delete-user="${escapeAttr(user.id)}" data-user-name="${escapeAttr(user.name)}">Remover</button>`}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function createAccount() {
+    const name = els.newUserName.value.trim();
+    const email = els.newUserEmail.value.trim();
+    const password = els.newUserPassword.value;
+    if (!name || !email) return toast('Preencha o nome e o e-mail.', 'error');
+    if (password.length < 12) return toast('A senha inicial precisa ter pelo menos 12 caracteres.', 'error');
+    els.createUserBtn.disabled = true;
+    try {
+      const response = await apiFetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name, email, password, role: els.newUserRole.value })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      els.newUserName.value = '';
+      els.newUserEmail.value = '';
+      els.newUserPassword.value = '';
+      await loadAccounts();
+      toast(`Conta criada para ${data.user.email}. Comunique a senha inicial em segurança.`, 'success');
+    } catch (error) {
+      toast(`Não foi possível criar a conta: ${error.message}`, 'error');
+    } finally {
+      els.createUserBtn.disabled = false;
+    }
+  }
+
+  async function setAccountActive(userId, active) {
+    try {
+      const response = await apiFetch(`/api/users/${encodeURIComponent(userId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ active })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      await loadAccounts();
+      toast(active ? 'Conta reativada.' : 'Conta desativada.', 'success');
+    } catch (error) {
+      toast(`Falha ao alterar a conta: ${error.message}`, 'error');
+    }
+  }
+
+  async function resetAccountPassword(userId, userName) {
+    const password = prompt(`Nova senha para ${userName} (mínimo 12 caracteres):`);
+    if (password === null) return;
+    if (password.length < 12) return toast('A senha precisa ter pelo menos 12 caracteres.', 'error');
+    try {
+      const response = await apiFetch(`/api/users/${encodeURIComponent(userId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      toast('Senha redefinida. As sessões abertas dessa conta foram encerradas.', 'success');
+    } catch (error) {
+      toast(`Falha ao redefinir a senha: ${error.message}`, 'error');
+    }
+  }
+
+  async function deleteAccount(userId, userName) {
+    if (!confirm(`Remover a conta de ${userName}? Os tokens pessoais dela serão revogados.`)) return;
+    try {
+      const response = await apiFetch(`/api/users/${encodeURIComponent(userId)}`, { method: 'DELETE', headers: { Accept: 'application/json' } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      await loadAccounts();
+      toast('Conta removida.', 'success');
+    } catch (error) {
+      toast(`Falha ao remover: ${error.message}`, 'error');
     }
   }
 

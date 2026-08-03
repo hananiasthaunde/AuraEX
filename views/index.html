@@ -261,6 +261,18 @@
             </article>
 
             <article class="settings-card full-width">
+              <div class="settings-card-heading"><div><span class="panel-kicker">EQUIPA</span><h3>Utilizadores com acesso</h3><p>Cada conta criada aqui entra com o próprio e-mail e senha, e vê os dados de todos os mentorados.</p></div><span class="security-badge">SÓ ADMIN</span></div>
+              <div class="user-create-grid">
+                <label class="field-label">Nome<input type="text" id="newUserName" maxlength="120" placeholder="Nome completo" /></label>
+                <label class="field-label">E-mail<input type="email" id="newUserEmail" placeholder="pessoa@empresa.com" /></label>
+                <label class="field-label">Senha inicial (mín. 12 caracteres)<input type="password" id="newUserPassword" autocomplete="new-password" minlength="12" /></label>
+                <label class="field-label">Papel<select id="newUserRole"><option value="user" selected>Utilizador</option><option value="admin">Administrador</option></select></label>
+                <button class="btn btn-primary" id="createUserBtn"><svg><use href="#i-plus"/></svg>Criar conta</button>
+              </div>
+              <div class="user-list" id="userList"><div class="empty-state">A carregar utilizadores...</div></div>
+            </article>
+
+            <article class="settings-card full-width">
               <span class="panel-kicker">CONTA</span><h3>Alterar senha</h3><p>Após a troca, todas as sessões atuais serão encerradas e será necessário entrar novamente.</p>
               <form id="passwordForm" class="password-settings-form">
                 <label class="field-label">Senha atual<input type="password" id="currentPassword" autocomplete="current-password" required /></label>

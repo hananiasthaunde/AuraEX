@@ -476,11 +476,26 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 @keyframes toastIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* ----------------------------------------------------
+   GESTAO DE UTILIZADORES
+   ---------------------------------------------------- */
+.user-create-grid { margin-top: 14px; display: grid; grid-template-columns: minmax(150px,1fr) minmax(180px,1.1fr) minmax(160px,1fr) minmax(120px,.55fr) auto; gap: 8px; align-items: end; }
+.user-create-grid select { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 0 10px; background: #fff; color: var(--ink); outline: 0; font-weight: 400; }
+.user-list { margin-top: 16px; display: grid; gap: 6px; }
+.user-row { display: grid; grid-template-columns: minmax(170px,1.3fr) minmax(100px,.5fr) minmax(140px,.8fr) auto; gap: 8px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+.user-row strong, .user-row small { display: block; }
+.user-row strong { font-size: 11px; font-weight: 500; }
+.user-row small { margin-top: 2px; color: var(--muted); font-size: 9.5px; font-weight: 400; }
+.user-row.inactive { opacity: .55; background: #fafafa; }
+.user-row .settings-actions { margin: 0; flex-wrap: wrap; justify-content: flex-end; }
+.user-role { padding: 3px 5px; border-radius: 5px; color: var(--info); background: var(--info-soft); font-style: normal; font-size: 8.5px; font-weight: 500; }
+
+/* ----------------------------------------------------
    100% RESPONSIVE MEDIA QUERIES (DESKTOP TO MOBILE)
    ---------------------------------------------------- */
 @media (max-width: 1280px) {
   .user-chip div { display: none; }
   .token-create-grid { grid-template-columns: repeat(2, minmax(200px,1fr)); }
+  .user-create-grid { grid-template-columns: repeat(2, minmax(180px,1fr)); }
   .password-settings-form { grid-template-columns: repeat(2, minmax(200px,1fr)); }
 }
 
@@ -507,8 +522,8 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   .onboarding-slide { grid-template-columns: 1fr; }
   .onboarding-art { min-height: 200px; }
   .onboarding-content { min-height: auto; }
-  .mcp-endpoint-row, .token-create-grid, .password-settings-form { grid-template-columns: 1fr; }
-  .token-row { grid-template-columns: 1fr 1fr; }
+  .mcp-endpoint-row, .token-create-grid, .password-settings-form, .user-create-grid { grid-template-columns: 1fr; }
+  .token-row, .user-row { grid-template-columns: 1fr 1fr; }
   .token-row .btn { justify-self: start; }
   .new-token-panel { align-items: flex-start; flex-direction: column; }
 }
@@ -563,7 +578,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   .welcome-actions .btn { width: 100%; }
   .segmented { width: 100%; }
   .segmented button { flex: 1; }
-  .token-row { grid-template-columns: 1fr; }
+  .token-row, .user-row { grid-template-columns: 1fr; }
   .settings-card-heading { flex-direction: column; }
 }
 

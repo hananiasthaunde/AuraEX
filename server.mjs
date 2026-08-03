@@ -15,15 +15,21 @@ import {
   clearLoginFailures,
   createPat,
   createSession,
+  createUser,
   csrfValid,
+  deleteUser,
   destroySession,
   findUserByEmail,
   listTokens,
+  listUsers,
   loadDotEnv,
+  PERSIST_ERROR,
   recordLoginFailure,
   revokePat,
   sessionCookie,
   sessionPayload,
+  setUserActive,
+  setUserPassword,
   verifyPassword
 } from './lib/security.mjs';
 
@@ -262,16 +268,59 @@ async function handleTokens(req, res, pathname) {
   if (pathname === '/api/tokens' && req.method === 'POST') {
     const body = await readJsonBody(req, LOGIN_MAX_BODY);
     const created = createPat(auth.user.id, { name: body.name, scopes: body.scopes, expiresInDays: body.expiresInDays });
+    if (!created.ok) return sendJson(req, res, 503, { error: created.error });
     audit(req, 'pat.created', { tokenId: created.record.id, name: created.record.name, scopes: created.record.scopes }, { ...auth.user, type: 'user' });
     return sendJson(req, res, 201, { token: created.token, metadata: created.record, warning: 'Este token só será mostrado uma vez.' });
   }
 
   const match = pathname.match(/^\/api\/tokens\/([^/]+)$/);
   if (match && req.method === 'DELETE') {
-    const ok = revokePat(auth.user.id, decodeURIComponent(match[1]));
-    if (!ok) return sendJson(req, res, 404, { error: 'Token não encontrado.' });
+    const result = revokePat(auth.user.id, decodeURIComponent(match[1]));
+    if (!result.ok) return sendJson(req, res, result.error === 'Token não encontrado.' ? 404 : 503, { error: result.error });
     audit(req, 'pat.revoked', { tokenId: match[1] }, { ...auth.user, type: 'user' });
     return sendJson(req, res, 200, { ok: true });
+  }
+
+  return sendJson(req, res, 405, { error: 'Método não permitido.' });
+}
+
+async function handleUsers(req, res, pathname) {
+  const auth = requireApiAuth(req, res);
+  if (!auth || auth.type !== 'session') return;
+  if (auth.user.role !== 'admin') return sendJson(req, res, 403, { error: 'Apenas administradores podem gerir utilizadores.' });
+
+  if (pathname === '/api/users' && req.method === 'GET') {
+    return sendJson(req, res, 200, { users: listUsers() });
+  }
+
+  if (pathname === '/api/users' && req.method === 'POST') {
+    const body = await readJsonBody(req, LOGIN_MAX_BODY);
+    const result = createUser({ name: body.name, email: body.email, password: body.password, role: body.role });
+    if (!result.ok) return sendJson(req, res, result.error === PERSIST_ERROR ? 503 : 400, { error: result.error });
+    audit(req, 'user.created', { userId: result.user.id, email: result.user.email, role: result.user.role }, { ...auth.user, type: 'user' });
+    return sendJson(req, res, 201, { user: result.user });
+  }
+
+  const match = pathname.match(/^\/api\/users\/([^/]+)$/);
+  if (match) {
+    const userId = decodeURIComponent(match[1]);
+
+    if (req.method === 'PATCH') {
+      const body = await readJsonBody(req, LOGIN_MAX_BODY);
+      const result = typeof body.password === 'string'
+        ? setUserPassword(userId, body.password)
+        : setUserActive(userId, body.active !== false, auth.user.id);
+      if (!result.ok) return sendJson(req, res, result.error === PERSIST_ERROR ? 503 : 400, { error: result.error });
+      audit(req, typeof body.password === 'string' ? 'user.password_reset' : 'user.active_changed', { userId }, { ...auth.user, type: 'user' });
+      return sendJson(req, res, 200, { user: result.user });
+    }
+
+    if (req.method === 'DELETE') {
+      const result = deleteUser(userId, auth.user.id);
+      if (!result.ok) return sendJson(req, res, result.error === PERSIST_ERROR ? 503 : 400, { error: result.error });
+      audit(req, 'user.deleted', { userId, email: result.user.email }, { ...auth.user, type: 'user' });
+      return sendJson(req, res, 200, { ok: true });
+    }
   }
 
   return sendJson(req, res, 405, { error: 'Método não permitido.' });
@@ -402,6 +451,7 @@ export async function handleRequest(req, res) {
     if (pathname === '/mcp') return handleMcp(req, res);
     if (pathname.startsWith('/api/auth/')) return handleAuth(req, res, pathname);
     if (pathname === '/api/tokens' || pathname.startsWith('/api/tokens/')) return handleTokens(req, res, pathname);
+    if (pathname === '/api/users' || pathname.startsWith('/api/users/')) return handleUsers(req, res, pathname);
     if (pathname === '/api/mentorados') return handleWorkbookApi(req, res);
     if (pathname === '/api/export/excel') return handleExportExcelApi(req, res);
 
